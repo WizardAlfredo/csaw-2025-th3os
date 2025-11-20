@@ -1,2 +1,2 @@
-# csaw-2025-th3os
-Solutions of the CSAW Finals 2025
+# CSAW ESC 2025 Finals
+Solutions of the CSAW ESC Finals 2025

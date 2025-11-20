@@ -1,0 +1,15 @@
+# Timing Attack CTF Writeup
+
+## Vulnerability
+The password verification function contains a timing side-channel: it breaks early on incorrect characters but adds a delay (`5000/(c+1) - i*125` iterations) for matching characters, making correct guesses measurably slower.
+
+## Solution
+The attack exploits the timing difference by sending an initial probe with an invalid password to establish a baseline timing. Then, for each position, I brute-force through the charset character-by-character, measuring the response time for each attempt. When the timing delta exceeds the threshold (>0.002s), the character is correct and gets appended to the discovered portion. The password is built incrementally using the format `gk1{` + discovered_chars + padding + `}`, with padding characters filling the remaining length to maintain consistent message size.
+
+## Optimizations & Future Work
+Future improvements include implementing ML-based character prediction using common password patterns and leetspeak to reduce the number of attempts needed. Additionally, the charset loop could break immediately upon detecting a timing spike rather than testing remaining characters unnecessarily.
+
+## Mitigation
+To prevent this attack, the verification function should implement constant-time comparison by processing all characters regardless of match status, accumulating results in a list, and only evaluating success after completing the entire loop. This ensures execution time remains uniform regardless of where mismatches occur.
+
+**Flag recovered in ~{query number} queries by exploiting timing differences in password verification loop.**
